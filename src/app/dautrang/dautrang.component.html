@@ -9,13 +9,10 @@
     <section class="sidebar">
         <div class="user-panel">
             <div class="pull-left image" >
-                <a href="">
-                    <img h src="" class="img-circle" width="50" height="50" alt="Quản Trị Viên" />
-                </a>
             </div>
             <div class="pull-left info">
                 <p>Khánh Huyền</p>
-                <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+                <a href="#"> <img src="assets/Admin/dist/img/logo.png"> </a>
             </div>
         </div>
         <form action="#" method="get" class="sidebar-form">
@@ -31,70 +28,47 @@
         <ul class="sidebar-menu" data-widget="tree">
             <li class="header">Quản Trị</li>
             <li class="treeview">
-                <a href="#">
-                    <i class="fa fa-pie-chart"></i>
+                <a [routerLink]="['loai-sp']">
+                    <i class="fa fa-cubes"></i>
                     <span>Quản lý loại sản phẩm</span>
-                    <span class="pull-right-container">
-                        <i class="fa fa-angle-left pull-right"></i>
-                    </span>
                 </a>
-                <ul class="treeview-menu">
-                    <li><a href=""><i class="fab fa-android"></i>Danh sách sản phẩm</a></li>
-                </ul>
             </li>
             <li class="treeview">
-                <a href="#">
-                    <i class="fa fa-pie-chart"></i>
+                <a [routerLink]="['']">
+                    <i class="fa fa-cube"></i>
                     <span>Quản lý sản phẩm</span>
+                </a>
+            </li>
+            <li class="treeview">
+                <a href="#">
+                    <i class="fa fa-calendar"></i>
+                    <span>Quản lý đơn hàng</span>
                     <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
                     </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href=""><i class="fab fa-android"></i>Danh sách sản phẩm</a></li>
+                    <li><a href=""><i class="fab fa-android"></i> Danh sách đơn hàng</a></li>
+                    <li><a href=""><i class="fab fa-android"></i> Chi tiết</a></li>
                 </ul>
             </li>
             <li class="treeview">
-                <a href="#">
-                    <i class="fa fa-folder"></i> <span>Quản lý đơn hàng</span>
-                    <span class="pull-right-container">
-                        <i class="fa fa-angle-left pull-right"></i>
-                    </span>
-                </a>
-                <ul class="treeview-menu">
-                    <li><a href=""><i class="fab fa-android"> </i>Danh sách đơn hàng</a></li>
-                    <li><a href=""><i class="fab fa-android"> </i>Chi tiết</a></li>
-                </ul>
-            </li>
-            <li class="treeview">
-                <a href="#">
-                    <i class="fas fa-edit"></i> <span>Nhà Cung Cấp</span>
-                    <span class="pull-right-container">
-                        <i class="fa fa-angle-left pull-right"></i>
-                    </span>
+                <a [routerLink]="['nha-cung-cap']">
+                    <i class="fa fa-address-book"></i>
+                    <span>Nhà Cung Cấp</span>
                 </a>
             </li>
             <li class="treeview">
-                <a href="#">
-                    <i class="fas fa-user-tie"></i> <span>Quản lý User</span>
-                    <span class="pull-right-container">
-                        <i class="fa fa-angle-left pull-right"></i>
-                    </span>
+                <a [routerLink]="['']">
+                    <i class="fa fa-user"></i>
+                    <span>Quản lý User</span>
                 </a>
-                <ul class="treeview-menu">
-                    <li><a href=""><i class="fab fa-android"> </i> Danh sách</a></li>
-                </ul>
             </li>
             <li class="treeview">
-                <a href="#">
-                    <i class="fas fa-user-tie"></i> <span>Quản lý Khách Hàng</span>
-                    <span class="pull-right-container">
-                        <i class="fa fa-angle-left pull-right"></i>
-                    </span>
+                <a [routerLink]="['']">
+                    <i class="fa fa-child"></i>
+                    <span>Quản lý Khách Hàng</span>
                 </a>
-                <ul class="treeview-menu">
-                    <li><a href=""><i class="fab fa-android"> </i> Danh sách TT Khách Hàng</a></li>
-                </ul>
             </li>
         </ul>
     </section>

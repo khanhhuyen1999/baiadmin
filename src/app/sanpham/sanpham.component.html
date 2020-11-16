@@ -6,158 +6,145 @@
                     <div class="box-header">
                         <h3 class="box-title">Quản Lý Sản Phẩm</h3>
                     </div>
-                    <button  class="btn btn-primary" onclick="themsp()">Thêm Sản Phẩm</button>
+                    <div class="col-md-12 mb-3">
+                        <button class="btn btn-outline-primary" (click)="onCreate()"><i class="fa fa-plus"></i> Thêm Sản Phẩm</button>
+                    </div>
                     <div class="box-body">
-                        <table id="example1" class="table table-bordered table-striped">
-                            <thead>
+                        <p-table selectionMode="single" [value]="data" styleClass="p-datatable-striped">
+                            <ng-template pTemplate="header">
                                 <tr>
                                     <th>Mã Sản Phẩm</th>
                                     <th>Tên Sản Phẩm </th>
                                     <th>Mô Tả</th>
                                     <th>Mã Loại</th>   
-                                    <th> Ảnh</th>   
+                                    <th>Ảnh</th>   
                                     <th>Số Lượng</th>
                                     <th>Giá</th>
-                                    <th>Edit</th>
-                                    <th>Delete</th>
+                                    <th>Tùy chọn</th>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                    <tr>
-                                        <td>1001</td>
-                                        <td>ư1</td>
-                                        <td>dfdgh</td>
-                                        <td>qadfghjkl</td>
-                                        <td><img src="assets/images/home/Products/" height="80" width="80"></td>
-                                        <td>100</td>
-                                        <td>12.000.000</td>
-                                        <td><a class="btn btn-success" href=""><i class="glyphicon glyphicon-pencil"></i></a></td>
-                                        <td><a class="btn btn-danger" onclick="return confirm('Bạn có muốn xóa không?');" href="/xoasanpham/"><i class="glyphicon glyphicon-trash"></i></a></td>
-                                    </tr>
-                            </tbody>
-                        </table>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-item let-i="rowIndex">
+                                
+                                <tr>
+                                    <td>{{item.maSp}}</td>
+                                    <td>{{item.tenSp}}</td>
+                                    <td innerHTML="{{item.moTa | truncate:60}}"></td>
+                                    <td>{{item.maLoai}}</td>
+                                    <td><img src="{{item.anh | getImage:1}}" height="80" width="80"></td>
+                                    <td>{{item.soLuong}}</td>
+                                    <td>{{item.gia}}</td>
+                                    
+                                    <td class="action-col" >
+                                        <button type="button" (click)="onEdit(item)" class="btn btn-icon rounded-circle btn-outline-warning mr-1 mb-1 waves-effect waves-light">
+                                            <i class="fa fa-edit"></i>
+                                        </button>
+                                        <button type="button" (click)="onDelete(item)" class="btn btn-icon rounded-circle btn-outline-danger mr-1 mb-1 waves-effect waves-light">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                    <div class="box-footer">
+                        <div class="col-xs-12" style="text-align: right;">
+                            <ngb-pagination [collectionSize]="totalRecords" [pageSize]="pageSize" [(page)]="page" [maxSize]="10" [rotate]="true" (pageChange)="onLoadPage($event)"></ngb-pagination>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 </div>
-<div class="modal fade" id="viewone">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button class="close" data-dismiss="modal">&times;</button>
-                <h3 class="modal-title">View Dữ Liệu</h3>
-            </div>
-            <div class="modal-body">
-                <form id="demo-form2" method="get" enctype="multipart/form-data" action="" data-parsley-validate class="form-horizontal form-label-left">
 
-                    <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">
-                            Mã Loại Sản Phẩm
-                        </label>
-                        <label class="control-label col-sm-6" id="vMaloai">
-                        </label>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">
-                            Tên Loại Sản Phẩm
-                        </label>
-                        <label class="control-label col-sm-6" id="vTenloai">
-                        </label>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">
-                            Mô Tả
-                        </label>
-                        <label class="control-label col-sm-6 " id="vMota">
-                        </label>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-danger" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
 <div class="modal" id="myModal">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="titlesua">Thêm Sản Phẩm</h4>
+                <h4 class="modal-title" id="titlesua">{{ isCreate ? "Thêm sản phẩm" : "Sửa sản phẩm" }}</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
-            <div class="modal-body">
-            <form id="demo-form2" method="post" enctype="multipart/form-data" action="" data-parsley-validate class="form-horizontal form-label-left">
+            <form [formGroup]="form" (ngSubmit)="onSubmit()" data-parsley-validate class="form-horizontal form-label-left">
+                <div class="modal-body">
                     <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">
                             Tên Sản Phẩm <span class="required">*</span>
                         </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                            <input id="tensp" name="tensp" class="date-picker form-control col-md-7 col-xs-12" required="required" type="text">
+                        <div class="col-md-9 col-sm-9 col-xs-12">
+                            <input type="text" class="form-control" formControlName="TenSP">
+                            <ng-container *ngIf="submitted && f.TenSP.errors">
+                                <div *ngIf="f.TenSP.errors.required" class="alert alert-danger mt-1">Vui lòng nhập tên sản phẩm</div>
+                            </ng-container>
                         </div>
                     </div> 	
                     <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">
                             Loại <span class="required">*</span>
                         </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                            <select id="idloai" name="idloai" class="date-picker form-control col-md-7 col-xs-12" required="required" type="text">
-                        <option value=""></option>
-                        </select> 
-                        </div>
-                    </div> 
-                    <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">
-                            Ảnh
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                            <input id="anh" name="anh" class="date-picker form-control col-md-7 col-xs-12"  type="file"accepted='image' >
-                        </div>
-                    </div> 
-                    <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">
-                            Mô tả
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                            <input id="mota" name="mota" class="date-picker form-control col-md-7 col-xs-12"  type="text">
-                        </div>
-                    </div> 
-                    <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">
-                            Số lượng <span class="required">*</span>
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                            <input id="sl" name="sl" class="date-picker form-control col-md-7 col-xs-12" required="required" type="text">
+                        <div class="col-md-9 col-sm-9 col-xs-12">
+                            <select formControlName="MaLoai" class="form-control">
+                                <option *ngFor="let item of loaisps" value="{{item.maLoaiSp}}">{{item.tenLoaiSp}}</option>
+                            </select>
+                            <ng-container *ngIf="submitted && f.MaLoai.errors">
+                                <div *ngIf="f.MaLoai.errors.required" class="alert alert-danger mt-1">Vui lòng chọn danh mục</div>
+                            </ng-container>
                         </div>
                     </div> 
                     <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">
-                            Giá nhập
+                            Mô tả
                         </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                            <input id="gianhap" name="gianhap" class="date-picker form-control col-md-7 col-xs-12"  type="text">
+                        <div class="col-md-9 col-sm-9 col-xs-12">
+                            <p-editor [style]="{'height':'150px'}" formControlName="MoTa"></p-editor>
+                            <ng-container *ngIf="submitted && f.MoTa.errors">
+                                <div *ngIf="submitted && f.MoTa.errors.required" class="alert alert-danger mt-1">Vui lòng nhập mô tả</div>
+                            </ng-container>
                         </div>
-                    </div>
-                    <div class="ln_solid"></div>
+                    </div> 
                     <div class="form-group">
-                        <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                            <button type="submit" class="btn btn-success">Lưu</button>
-                            <button class="btn btn-primary" type="reset">Làm mới</button>
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">
+                            Số lượng <span class="required">*</span>
+                        </label>
+                        <div class="col-md-9 col-sm-9 col-xs-12">
+                            <input type="number" class="form-control" formControlName="SoLuong">
+                            <ng-container *ngIf="submitted && f.SoLuong.errors">
+                                <div *ngIf="f.SoLuong.errors.required" class="alert alert-danger mt-1">Vui lòng nhập số lượng</div>
+                                <div *ngIf="f.SoLuong.errors.pattern" class="alert alert-danger mt-1">Giá trị nhập không hợp lệ</div>
+                            </ng-container>
+                        </div>
+                    </div> 
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">
+                            Giá
+                        </label>
+                        <div class="col-md-9 col-sm-9 col-xs-12">
+                            <input type="number" class="form-control" formControlName="Gia">
+                            <ng-container *ngIf="submitted && f.Gia.errors">
+                                <div *ngIf="f.Gia.errors.required" class="alert alert-danger mt-1">Vui lòng nhập đơn giá</div>
+                                <div *ngIf="f.Gia.errors.pattern" class="alert alert-danger mt-1">Giá trị nhập không hợp lệ</div>
+                            </ng-container>
                         </div>
                     </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-            </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">
+                            Ảnh
+                        </label>
+                        <div class="col-md-9 col-sm-9 col-xs-12">
+                            <div *ngIf="!isCreate" class="alert alert-warning mb-1">Có thể bỏ qua ảnh để sử dụng ảnh hiện tại</div>
+                            <p-fileUpload #file_image mode="advanced" [showUploadButton]="false" [showCancelButton]="false" chooseLabel ="Chọn ảnh" [multiple]="false" accept="image/*" maxFileSize="1000000">
+                            </p-fileUpload>
+                            <div *ngIf="submitted && isCreate && !file_image.hasFiles()" class="alert alert-danger mt-1">Vui lòng chọn một file ảnh</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Lưu</button>
+                    <button class="btn btn-primary" type="reset">Làm mới</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Đóng</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
 
-<script>
-    $(function(){
-        $("#myModal").mod;
-    })
-</script>
+<div ndt-loading *ngIf="loading"></div>
